@@ -1,0 +1,27 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    ports:
+      - "8088:8088"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+    command: sh -lc "composer install && composer serve"
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: project_service
+      MYSQL_USER: project_user
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3308:3306"
+    volumes:
+      - project_service_data:/var/lib/mysql
+
+volumes:
+  project_service_data:
